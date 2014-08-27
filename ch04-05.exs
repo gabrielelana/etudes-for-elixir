@@ -28,7 +28,7 @@ end
 
 ExUnit.start
 
-defmodule PowerTest do
+defmodule PowersTest do
   use ExUnit.Case, async: true
 
   test ".nth_root/2" do

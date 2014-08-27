@@ -31,7 +31,7 @@ end
 
 ExUnit.start
 
-defmodule PowerTest do
+defmodule PowersTest do
   use ExUnit.Case, async: true
 
   test ".raise/2" do
