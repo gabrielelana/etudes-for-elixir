@@ -22,3 +22,25 @@ defmodule Geom do
     :math.pi * semi_major * semi_minor
   end
 end
+
+
+ExUnit.start
+
+defmodule GeomTest do
+  use ExUnit.Case, async: true
+
+  test ".area/3 for :rectangle" do
+    assert 12 == Geom.area(:rectangle, 3, 4)
+  end
+
+  test ".area/3 for :triangle" do
+    assert 7.5 == Geom.area(:triangle, 3, 5)
+  end
+
+  test ".area/3 for :ellipse" do
+    assert 25.132741228718345 == Geom.area(:ellipse, 2, 4)
+
+    # or a more appropriate assertion
+    assert_in_delta 25.13, Geom.area(:ellipse, 2, 4), 0.01
+  end
+end
