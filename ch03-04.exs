@@ -26,3 +26,21 @@ defmodule Geom do
     :math.pi * semi_major * semi_minor
   end
 end
+
+
+ExUnit.start
+
+defmodule GeomTest do
+  use ExUnit.Case, async: true
+
+  test ".area/1" do
+    assert 21 == Geom.area({:rectangle, 7, 3})
+    assert 10.5 == Geom.area({:triangle, 7, 3})
+    assert_in_delta 65.97, Geom.area({:ellipse, 7, 3}), 0.01
+  end
+
+  test ".area/1 with usupported shapes" do
+    catch_error Geom.area({:pentagon, 7, 3})
+    catch_error Geom.area(:rectangle, 7, 3)
+  end
+end
