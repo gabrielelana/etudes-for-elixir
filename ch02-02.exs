@@ -3,3 +3,16 @@ defmodule Geom do
     length * width
   end
 end
+
+
+ExUnit.start
+
+defmodule GeomTest do
+  use ExUnit.Case, async: true
+
+  test ".area/2 with default values" do
+    assert 35 == Geom.area(7, 5)
+    assert 7 == Geom.area(7)
+    assert 1 == Geom.area
+  end
+end
