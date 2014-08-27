@@ -27,3 +27,22 @@ defmodule Geom do
     :math.pi * semi_major * semi_minor
   end
 end
+
+
+ExUnit.start
+
+defmodule GeomTest do
+  use ExUnit.Case, async: true
+
+  test ".area/3 for :rectangle with negative number" do
+    catch_error Geom.area(:rectangle, -3, 4)
+  end
+
+  test ".area/3 for :triangle with negative number" do
+    catch_error Geom.area(:triangle, 3, -4)
+  end
+
+  test ".area/3 for :ellipse with negative number" do
+    catch_error Geom.area(:ellipse, -3, -4)
+  end
+end
