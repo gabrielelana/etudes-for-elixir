@@ -35,3 +35,19 @@ defmodule Geom do
     0
   end
 end
+
+
+ExUnit.start
+
+defmodule GeomTest do
+  use ExUnit.Case, async: true
+
+  test ".area/3 with not supported shape" do
+    assert 0 == Geom.area(:pentagon, 3, 4)
+  end
+
+  test ".area/3 with negative numbers" do
+    assert 0 == Geom.area(:triangle, -3, 4)
+    assert 0 == Geom.area(:ellipse, -3, -4)
+  end
+end
