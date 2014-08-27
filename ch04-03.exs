@@ -35,3 +35,26 @@ defmodule Powers do
     1.0 / raise_with_guards(x, -n)
   end
 end
+
+
+ExUnit.start
+
+defmodule PowerTest do
+  use ExUnit.Case, async: true
+
+  test ".raise/2" do
+    assert 5 == Powers.raise(5,1)
+    assert 8 == Powers.raise(2,3)
+    assert 1.728 == Powers.raise(1.2,3)
+    assert 1 == Powers.raise(2, 0)
+    assert 0.125 == Powers.raise(2, -3)
+  end
+
+  test ".raise_with_guards/2" do
+    assert 5 == Powers.raise_with_guards(5,1)
+    assert 8 == Powers.raise_with_guards(2,3)
+    assert 1.728 == Powers.raise_with_guards(1.2,3)
+    assert 1 == Powers.raise_with_guards(2, 0)
+    assert 0.125 == Powers.raise_with_guards(2, -3)
+  end
+end
