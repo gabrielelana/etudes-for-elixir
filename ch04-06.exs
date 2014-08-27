@@ -26,3 +26,14 @@ defmodule Powers do
     Stream.iterate(start_at, guesser)
   end
 end
+
+
+ExUnit.start
+
+defmodule PowerTest do
+  use ExUnit.Case, async: true
+
+  test ".nth_root/2" do
+    assert 3.0 == Powers.nth_root(27, 3)
+  end
+end
