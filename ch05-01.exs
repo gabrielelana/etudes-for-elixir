@@ -30,7 +30,7 @@ defmodule Geom do
       shape = char_to_shape(String.first(input))
       {d1, d2} = case shape do
         :rectangle -> aks_for_dimensions("width", "height")
-        :triangle -> aks_for_dimensions("base ", "height" )
+        :triangle -> aks_for_dimensions("base", "height" )
         :ellipse -> aks_for_dimensions("major radius", "minor radius")
         :unknown -> {String.first(input), 0}
       end
@@ -75,5 +75,88 @@ defmodule Geom do
         true              -> IO.puts("Area: #{Geom.area(shape, d1, d2)}")
       end
     end
+  end
+end
+
+
+ExUnit.start
+
+defmodule GeomTest do
+  use ExUnit.Case, async: true
+  import ExUnit.CaptureIO
+
+  test "interaction to calculate areas of rectangles" do
+    expected_interaction(
+      """
+      R)ectangle, T)riangle, or E)llipse: {R}
+      Enter width > {10}
+      Enter height > {20}
+      Area: #{Geom.area(:rectangle, 10, 20)}
+      """
+    )
+  end
+
+  test "interaction to calculate areas of triangles" do
+    expected_interaction(
+      """
+      R)ectangle, T)riangle, or E)llipse: {T}
+      Enter base > {10}
+      Enter height > {20}
+      Area: #{Geom.area(:triangle, 10, 20)}
+      """
+    )
+  end
+
+  test "interaction to calculate areas of ellipses" do
+    expected_interaction(
+      """
+      R)ectangle, T)riangle, or E)llipse: {E}
+      Enter major radius > {10}
+      Enter minor radius > {20}
+      Area: #{Geom.area(:ellipse, 10, 20)}
+      """
+    )
+  end
+
+  test "interaction to calculate areas of unknown shapes" do
+    expected_interaction(
+      """
+      R)ectangle, T)riangle, or E)llipse: {X}
+      Unknown shape X.
+      """
+    )
+  end
+
+
+  defp expected_interaction(interaction) do
+    given_input = extract_input_from(interaction)
+    exptected_output = extract_output_from(interaction)
+    assert capture_io(given_input, fn -> Geom.UI.area end) == "#{exptected_output}\n"
+  end
+
+  defp extract_output_from(interaction) do
+    interaction
+      |> String.split("\n")
+      |> Enum.map(
+          fn(line) ->
+            Regex.replace(~r/^([^{]+)({[^}]+})?$/, line, "\\1")
+          end)
+      |> Enum.reject(&(String.length(&1) == 0))
+      |> Enum.join
+  end
+
+  defp extract_input_from(interaction) do
+    interaction
+      |> String.split("\n")
+      |> Enum.map(
+          fn(line) ->
+            Regex.scan(~r/{([^}]+)}/, line)
+          end)
+      |> Enum.reduce([],
+          fn([[_, t]], acc) -> [t|acc]
+            ([], acc) -> acc
+          end)
+      |> Enum.reverse
+      |> Enum.join("\n")
   end
 end
