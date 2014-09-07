@@ -72,7 +72,7 @@ defmodule Geom do
       cond do
         shape == :unknown -> IO.puts("Unknown shape #{d1}.")
         d1 < 0 or d2 < 0  -> IO.puts("Both numbers must be greater than or equal to zero.")
-        true              -> Geom.area(shape, d1, d2)
+        true              -> IO.puts("Area: #{Geom.area(shape, d1, d2)}")
       end
     end
   end
