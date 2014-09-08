@@ -1,3 +1,9 @@
+# In this étude, you will use regular expressions to make sure that input is
+# numeric and to distinguish integers from floating point numbers. You need to
+# do this because binary_to_float/1 will not accept a string like "1812" as an
+# argument
+
+
 defmodule Geom do
 
   @spec area(atom(), number(), number()) :: number()
