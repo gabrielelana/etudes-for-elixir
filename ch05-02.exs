@@ -61,8 +61,8 @@ defmodule Geom do
     defp ask_for_number(prompt) do
       IO.gets("Enter #{prompt} > ") |> String.strip |> (&(
         cond do
-          Regex.match?(~r/^[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?$/, &1) -> String.to_float(&1)
-          Regex.match?(~r/^[-+]?[0-9]+$/, &1) -> String.to_integer(&1)
+          Regex.match?(~r/^[-+]?\d+\.\d+([eE][-+]?\d+)?$/, &1) -> String.to_float(&1)
+          Regex.match?(~r/^[-+]?\d+$/, &1) -> String.to_integer(&1)
           true -> {:not_a_number, &1}
         end
       )).()
