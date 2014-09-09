@@ -28,6 +28,9 @@ defmodule Stats do
 
   """
 
+  @doc "Recursively find the minimum entry in a list of numbers."
+  @spec minimum([number]) :: number
+
   def minimum(l) do
     minimum(l, :"infinity+")
   end
@@ -38,6 +41,9 @@ defmodule Stats do
   defp minimum([_|t], so_far), do: minimum(t, so_far)
 
 
+  @doc "Recursively find the maximum entry in a list of numbers."
+  @spec maximum([number]) :: number
+
   def maximum(l) do
     maximum(l, :"infinity-")
   end
@@ -46,6 +52,10 @@ defmodule Stats do
   defp maximum([], so_far), do: so_far
   defp maximum([h|t], so_far) when h > so_far, do: maximum(t, h)
   defp maximum([_|t], so_far), do: maximum(t, so_far)
+
+
+  @doc "Find the range of a list of numbers as a list [min, max]."
+  @spec range([number]) :: [number]
 
   def range(l) do
     [minimum(l), maximum(l)]

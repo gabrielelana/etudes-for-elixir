@@ -28,13 +28,24 @@ defmodule Stats do
 
   """
 
+  @doc "Recursively find the minimum entry in a list of numbers."
+  @spec minimum([number]) :: number
+
   def minimum([h|t]) do
     scan(t, h, &scan/4, &</2)
   end
 
+
+  @doc "Recursively find the maximum entry in a list of numbers."
+  @spec maximum([number]) :: number
+
   def maximum([h|t]) do
     scan(t, h, &scan/4, &>/2)
   end
+
+
+  @doc "Find the range of a list of numbers as a list [min, max]."
+  @spec range([number]) :: [number]
 
   def range(l) do
     [minimum(l), maximum(l)]
