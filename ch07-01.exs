@@ -43,7 +43,7 @@ ExUnit.start
 defmodule CollegeTest do
   use ExUnit.Case, async: true
 
-  test "shall pass" do
+  test "read from csv" do
     room_list = College.room_list_from("ch07-01-courses.csv")
     assert [
       "A2211", "A4213", "A4231", "AD211", "AD221", "AF231", "C101A", "C101B", "C102",
