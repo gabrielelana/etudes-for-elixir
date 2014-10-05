@@ -1,3 +1,9 @@
+# Even though you won’t get an error message when calculating the area of a
+# shape that has negative dimensions, it’s still worth guarding your area/3
+# function. You will want two guards for each pattern to make sure that both
+# dimensions are greater than or equal to zero. Since both have to be
+# non-negative, use and to separate your guards.
+
 defmodule Geom do
   @vsn 0.1
   @moduledoc """
