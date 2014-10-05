@@ -1,3 +1,11 @@
+# Use atoms and pattern matching to make your area function calculate the area
+# of a rectangle, triangle, or ellipse. If your parameters are shape, a and b,
+# the area for the atom :rectangle is a * b, where a and b represent the length
+# and width. For a :triangle atom, the area is a * b / 2.0, with a and b
+# representing the base and height of the triangle. For an :ellipse atom, the
+# area is :math.pi() * a * b, where a and b represent the major and minor
+# radiuses
+
 defmodule Geom do
   @vsn 0.1
   @moduledoc """
