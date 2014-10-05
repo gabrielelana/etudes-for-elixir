@@ -1,3 +1,7 @@
+# Add an area/1 function that takes a tuple of the form {shape,number,number}
+# as its parameter. The area/1 function will call the private area/3 function.
+# Hint: use defp for private functions.
+
 defmodule Geom do
   @vsn 0.1
   @moduledoc """
