@@ -1,3 +1,12 @@
+# Two players each take 26 cards from a shuffled deck. Each person puts her top
+# card face up on the table. Whoever has the higher value card wins that
+# battle, takes both cards, and puts them at the bottom of her stack. What
+# happens if the cards have the same value? Then the players go to "war." Each
+# person puts the next two cards from their stack face down in the pile and a
+# third card face up. High card wins, and the winner takes all the cards for
+# the bottom of her stack. If the cards match again, the war continues with
+# another set of three cards from each person. If a person has fewer than three
+# cards when a war happens, he puts in all his cards.
 
 defmodule Dealer do
   defstruct players: [], flipped: [], turned: []
