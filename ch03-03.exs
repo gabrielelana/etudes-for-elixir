@@ -1,3 +1,10 @@
+# If you enter a shape that area/3 doesn’t know about, or if you enter negative
+# dimensions, Elixir will give you an error message. Use underscores to create
+# a “catch-all” version, so that anything at all that doesn’t match a valid
+# rectangle, triangle, or ellipse will return zero. This goes against the
+# Elixir philosophy of “let it fail,” but let’s look the other way and learn
+# about underscores anyway.
+
 defmodule Geom do
   @vsn 0.1
   @moduledoc """
