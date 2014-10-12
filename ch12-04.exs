@@ -5,10 +5,12 @@ defmodule Chatroom do
     GenServer.start_link(__MODULE__, HashDict.new, [{:name, __MODULE__}])
   end
 
+  @spec login(String.t) :: :ok | {:error, term}
   def login(name) do
     GenServer.call(__MODULE__, {:login, name})
   end
 
+  @spec login(String.t | pid) :: :ok | {:error, term}
   def logout(user) do
     GenServer.call(__MODULE__, {:logout, user})
   end
