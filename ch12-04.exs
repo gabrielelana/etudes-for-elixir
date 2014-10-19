@@ -77,26 +77,32 @@ defmodule Chatroom.User do
     GenServer.start_link(__MODULE__, [name, {display_module, display_pid}])
   end
 
+  @spec login(pid) :: :ok | {:error, term}
   def login(user) do
     GenServer.call(user, :login)
   end
 
+  @spec logout(pid) :: :ok | {:error, term}
   def logout(user) do
     GenServer.call(user, :logout)
   end
 
+  @spec say(pid, String.t) :: :ok | {:error, term}
   def say(user, message) do
     GenServer.call(user, {:say, message})
   end
 
+  @spec message(pid, String.t, String.t) :: :ok | {:error, term}
   def message(user, name, message) do
     GenServer.call(user, {:message, name, message})
   end
 
+  @spec profile(pid, String.t, String.t) :: :ok | {:error, term}
   def profile(user, key, value) do
     GenServer.call(user, {:profile, key, value})
   end
 
+  @spec whois(pid, String.t) :: {:ok, map} | {:error, term}
   def whois(user, name) do
     GenServer.call(user, {:whois, name})
   end
