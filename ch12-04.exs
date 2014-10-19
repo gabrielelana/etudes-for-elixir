@@ -10,7 +10,7 @@ defmodule Chatroom do
     GenServer.call(__MODULE__, {:login, name})
   end
 
-  @spec login(String.t | pid) :: :ok | {:error, term}
+  @spec logout(String.t) :: :ok | {:error, term}
   def logout(user) do
     GenServer.call(__MODULE__, {:logout, user})
   end
@@ -35,11 +35,7 @@ defmodule Chatroom do
     users = Dict.put(users, name, %{pid: pid, name: name, profile: []})
     {:reply, :ok, users}
   end
-  def handle_call({:logout, pid}, from = {pid, _ref}, users) when is_pid(pid) do
-    %{name: name} = Dict.values(users) |> Enum.find(fn(%{pid: user_pid}) -> user_pid == pid end)
-    handle_call({:logout, "Gabriele"}, from, users)
-  end
-  def handle_call({:logout, name}, {pid, _ref}, users) when is_binary(name) do
+  def handle_call({:logout, name}, {pid, _ref}, users) do
     {%{pid: ^pid, name: ^name, profile: profile}, users} = Dict.pop(users, name)
     {:reply, :ok, users}
   end
@@ -88,13 +84,6 @@ defmodule Chatroom.Test do
     Chatroom.start_link
     assert :ok == Chatroom.login("Gabriele")
     assert :ok == Chatroom.logout("Gabriele")
-    assert {:users, []} == Chatroom.users
-  end
-
-  test "logout with pid" do
-    Chatroom.start_link
-    assert :ok == Chatroom.login("Gabriele")
-    assert :ok == Chatroom.logout(self())
     assert {:users, []} == Chatroom.users
   end
 end
