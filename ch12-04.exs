@@ -26,7 +26,8 @@ defmodule Chatroom do
     GenServer.call(__MODULE__, :users)
   end
 
-  def profile_of(user) do
+  def whois(name) do
+    GenServer.call(__MODULE__, {:whois, name})
   end
 
   # GenServer callbacks
@@ -58,6 +59,15 @@ defmodule Chatroom do
   def handle_call(:users, _from, users) do
     {:reply, {:users, Dict.to_list(users)}, users}
   end
+  def handle_call({:whois, name}, _from, users) do
+    %{pid: pid, name: _} =
+      Dict.values(users) |> Enum.find(
+        fn(%{pid: _, name: an_user_name}) ->
+          an_user_name == name
+        end
+      )
+    {:reply, User.whois(pid, name), users}
+  end
 end
 
 defmodule Chatroom.User do
@@ -83,10 +93,12 @@ defmodule Chatroom.User do
     GenServer.call(user, {:message, name, message})
   end
 
-  def add_to_profile(user, key, value) do
+  def profile(user, key, value) do
+    GenServer.call(user, {:profile, key, value})
   end
 
-  def whois(name) do
+  def whois(user, name) do
+    GenServer.call(user, {:whois, name})
   end
 
   def users do
@@ -95,10 +107,10 @@ defmodule Chatroom.User do
   # GenServer callbacks
 
   def init([name, {display_module, display_pid}]) do
-    {:ok, %{name: name, display: {display_module, display_pid}}}
+    {:ok, %{name: name, display: {display_module, display_pid}, profile: HashDict.new}}
   end
 
-  def handle_call(:login, _from, status = %{name: name, display: _}) do
+  def handle_call(:login, _from, status = %{name: name}) do
     Chatroom.login(self(), name)
     {:reply, :ok, status}
   end
@@ -106,15 +118,25 @@ defmodule Chatroom.User do
     Chatroom.logout(self())
     {:reply, :ok, status}
   end
-  def handle_call({:say, message}, _from, status = %{name: name, display: {display_module, display_pid}}) do
+  def handle_call({:say, message}, _from, status = %{display: {display_module, display_pid}}) do
     display_module.show(display_pid, "Me: #{message}")
     Chatroom.say(self(), message)
     {:reply, :ok, status}
   end
-  def handle_call({:message, name, message}, _from, status) do
-    %{display: {display_module, display_pid}} = status
+  def handle_call({:message, name, message}, _from, status = %{display: {display_module, display_pid}}) do
     display_module.show(display_pid, "#{name}: #{message}")
     {:reply, :ok, status}
+  end
+  def handle_call({:profile, key, value}, _from, status = %{profile: profile}) do
+    {:reply, :ok, %{status | profile: Dict.put(profile, key, value)}}
+  end
+  def handle_call({:whois, name}, _from, status = %{name: name, profile: profile}) do
+    {:reply, {:ok, profile}, status}
+  end
+  def handle_call({:whois, name}, _from, status = %{display: {display_module, display_pid}}) do
+    {:ok, profile} = Chatroom.whois(name)
+    display_module.show(display_pid, "#{name}: #{inspect Dict.to_list(profile)}")
+    {:reply, {:ok, profile}, status}
   end
 
   def handle_cast(_msg, state) do
@@ -187,7 +209,7 @@ defmodule Chatroom.Test do
   end
 
   test "send a message" do
-    {:ok, chatroom} = Chatroom.start_link
+    Chatroom.start_link
     {:ok, gabriele_display} = Display.start_link
     {:ok, gabriele} = User.start_link("Gabriele", {Display, gabriele_display})
     {:ok, chiara_display} = Display.start_link
@@ -199,5 +221,20 @@ defmodule Chatroom.Test do
 
     assert Display.messages(gabriele_display) == ["Me: Hello everybody"]
     assert Display.messages(chiara_display) == ["Gabriele: Hello everybody"]
+  end
+
+  test "whois" do
+    Chatroom.start_link
+    {:ok, gabriele_display} = Display.start_link
+    {:ok, gabriele} = User.start_link("Gabriele", {Display, gabriele_display})
+    {:ok, chiara_display} = Display.start_link
+    {:ok, chiara} = User.start_link("Chiara", {Display, chiara_display})
+
+    User.login(gabriele)
+    User.login(chiara)
+    User.profile(gabriele, :age, 37)
+
+    User.whois(chiara, "Gabriele")
+    assert Display.messages(chiara_display) == ["Gabriele: [age: 37]"]
   end
 end
