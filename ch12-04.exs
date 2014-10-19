@@ -36,17 +36,17 @@ defmodule Chatroom do
   end
 
   def handle_call({:login, pid, name}, {pid, _ref}, users) do
-    users = Dict.put(users, pid, %{pid: pid, name: name, profile: []})
+    users = Dict.put(users, pid, %{pid: pid, name: name})
     {:reply, :ok, users}
   end
   def handle_call({:logout, pid}, {pid, _ref}, users) do
-    {%{pid: ^pid, name: _, profile: _}, users} = Dict.pop(users, pid)
+    {%{pid: ^pid, name: _}, users} = Dict.pop(users, pid)
     {:reply, :ok, users}
   end
   def handle_call({:say, pid, message}, {pid, _ref}, users) do
-    %{pid: ^pid, name: name, profile: _} = Dict.get(users, pid)
+    %{pid: ^pid, name: name} = Dict.get(users, pid)
     Dict.values(users) |> Enum.each(
-      fn(%{pid: user, name: _, profile: _}) ->
+      fn(%{pid: user, name: _}) ->
         case user do
           ^pid -> :do_not_send_back_message_to_yourself
           _ -> User.message(user, name, message)
@@ -176,7 +176,7 @@ defmodule Chatroom.Test do
   test "login" do
     Chatroom.start_link
     assert :ok == Chatroom.login(self(), "Gabriele")
-    assert {:users, [{self(), %{pid: self(), name: "Gabriele", profile: []}}]} == Chatroom.users
+    assert {:users, [{self(), %{pid: self(), name: "Gabriele"}}]} == Chatroom.users
   end
 
   test "logout" do
