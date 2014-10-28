@@ -1,7 +1,9 @@
 defmodule Duration do
   defmacro {m1, s1} + {m2, s2} do
     quote do
-      {unquote(m1) + unquote(m2), unquote(s1) + unquote(s2)}
+      seconds = rem(unquote(s1) + unquote(s2), 60)
+      minutes = div(unquote(s1) + unquote(s2), 60)
+      {unquote(m1) + unquote(m2) + minutes, seconds}
     end
   end
   defmacro a1 + a2 do
